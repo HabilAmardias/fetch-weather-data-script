@@ -1,0 +1,10 @@
+Include
+Lib
+Scripts
+pyvenv.cfg
+share
+__pycache__
+lib
+lib64
+bin
+.gitignore
