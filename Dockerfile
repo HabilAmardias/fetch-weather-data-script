@@ -17,7 +17,5 @@ RUN crontab /etc/cron.d/fetch-weather-job
 
 RUN touch /var/log/cron.log
 
-RUN echo "script started"
-
 # Start cron and keep container running
 CMD ["/bin/sh", "-c", "cron && tail -f /var/log/cron.log"]
