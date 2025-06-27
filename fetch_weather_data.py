@@ -18,26 +18,17 @@ def get_data():
         'latitude': -6.428865,
         'longitude': 106.924057,
         "timezone": "Asia/Bangkok",
-        'daily': ["temperature_2m_max", 
-                  "temperature_2m_min", 
-                  "apparent_temperature_max", 
-                  "apparent_temperature_min", 
-                  "daylight_duration", 
-                  "sunshine_duration", 
-                  "wind_speed_10m_max", 
-                  "wind_gusts_10m_max"]
+        'daily': ["temperature_2m_mean", "apparent_temperature_mean", "rain_sum", "wind_gusts_10m_mean", "wind_speed_10m_mean", "relative_humidity_2m_mean"]
     }
     response = client.weather_api(url, params=params)[0]
 
     daily = response.Daily()
-    daily_temperature_2m_max = daily.Variables(0).ValuesAsNumpy()
-    daily_temperature_2m_min = daily.Variables(1).ValuesAsNumpy()
-    daily_apparent_temperature_max = daily.Variables(2).ValuesAsNumpy()
-    daily_apparent_temperature_min = daily.Variables(3).ValuesAsNumpy()
-    daily_daylight_duration = daily.Variables(4).ValuesAsNumpy()
-    daily_sunshine_duration = daily.Variables(5).ValuesAsNumpy()
-    daily_wind_speed_10m_max = daily.Variables(6).ValuesAsNumpy()
-    daily_wind_gusts_10m_max = daily.Variables(7).ValuesAsNumpy()
+    daily_temperature_2m_mean = daily.Variables(0).ValuesAsNumpy()
+    daily_apparent_temperature_mean = daily.Variables(1).ValuesAsNumpy()
+    daily_rain_sum = daily.Variables(2).ValuesAsNumpy()
+    daily_wind_gusts_10m_mean = daily.Variables(3).ValuesAsNumpy()
+    daily_wind_speed_10m_mean = daily.Variables(4).ValuesAsNumpy()
+    daily_relative_humidity_2m_mean = daily.Variables(5).ValuesAsNumpy()
 
     daily_data = {"time": pd.date_range(
         start = pd.to_datetime(daily.Time(), unit = "s", utc = True),
@@ -46,14 +37,12 @@ def get_data():
         inclusive = "left"
     )}
 
-    daily_data["temperature_2m_max (°C)"] = daily_temperature_2m_max
-    daily_data["temperature_2m_min (°C)"] = daily_temperature_2m_min
-    daily_data["apparent_temperature_max (°C)"] = daily_apparent_temperature_max
-    daily_data["apparent_temperature_min (°C)"] = daily_apparent_temperature_min
-    daily_data["daylight_duration (s)"] = daily_daylight_duration
-    daily_data["sunshine_duration (s)"] = daily_sunshine_duration
-    daily_data["wind_speed_10m_max (km/h)"] = daily_wind_speed_10m_max
-    daily_data["wind_gusts_10m_max (km/h)"] = daily_wind_gusts_10m_max
+    daily_data["temperature_2m_mean (°C)"] = daily_temperature_2m_mean
+    daily_data["apparent_temperature_mean (°C)"] = daily_apparent_temperature_mean
+    daily_data["rain_sum (mm)"] = daily_rain_sum
+    daily_data["wind_gusts_10m_mean (km/h)"] = daily_wind_gusts_10m_mean
+    daily_data["wind_speed_10m_mean (km/h)"] = daily_wind_speed_10m_mean
+    daily_data["relative_humidity_2m_mean (%)"] = daily_relative_humidity_2m_mean
 
     daily_data = pd.DataFrame(data = daily_data)
 
@@ -72,8 +61,10 @@ def transform_data(df:pd.DataFrame):
 
 if __name__ == '__main__':
     load_dotenv()
+    
     logger = logging.getLogger("Weather Fetcher")
     logging.basicConfig(level=logging.INFO)
+
     repo = create_supabase_repository()
 
     data = get_data()
