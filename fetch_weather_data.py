@@ -10,7 +10,7 @@ import logging
 def get_data():
     client = openmeteo_requests.Client()
     url = 'https://archive-api.open-meteo.com/v1/archive'
-    end_date = date.today() - timedelta(days=1)
+    end_date = date.today() - timedelta(days=2)
     start_date = end_date - timedelta(days=4)
     params = {
         'start_date': start_date.strftime('%Y-%m-%d'),
@@ -30,12 +30,17 @@ def get_data():
     daily_wind_speed_10m_mean = daily.Variables(4).ValuesAsNumpy()
     daily_relative_humidity_2m_mean = daily.Variables(5).ValuesAsNumpy()
 
+    print(daily_temperature_2m_mean[-1])
+
+
     daily_data = {"time": pd.date_range(
         start = pd.to_datetime(daily.Time(), unit = "s", utc = True),
         end = pd.to_datetime(daily.TimeEnd(), unit = "s", utc = True),
         freq = pd.Timedelta(seconds = daily.Interval()),
-        inclusive = "left"
+        inclusive="right"
     )}
+
+    print(daily_data)
 
     daily_data["temperature_2m_mean (°C)"] = daily_temperature_2m_mean
     daily_data["apparent_temperature_mean (°C)"] = daily_apparent_temperature_mean
