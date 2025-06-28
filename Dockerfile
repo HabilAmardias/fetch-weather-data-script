@@ -16,7 +16,7 @@ RUN pip install --no-cache-dir -r ./requirements.txt
 
 # Create cron job for 00:00 GMT+7 (which is 17:00 UTC the previous day)
 RUN echo "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" > /etc/cron.d/fetch-weather-job && \
-    echo "0 23 * * * root cd /app && /usr/local/bin/python fetch_weather_data.py >> /var/log/cron.log 2>&1" >> /etc/cron.d/fetch-weather-job && \
+    echo "0 0 * * * root cd /app && /usr/local/bin/python fetch_weather_data.py >> /var/log/cron.log 2>&1" >> /etc/cron.d/fetch-weather-job && \
     echo "" >> /etc/cron.d/fetch-weather-job
 
 RUN chmod 0644 /etc/cron.d/fetch-weather-job
