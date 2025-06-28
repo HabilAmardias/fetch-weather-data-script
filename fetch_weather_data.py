@@ -30,8 +30,6 @@ def get_data():
     daily_wind_speed_10m_mean = daily.Variables(4).ValuesAsNumpy()
     daily_relative_humidity_2m_mean = daily.Variables(5).ValuesAsNumpy()
 
-    print(daily_temperature_2m_mean[-1])
-
 
     daily_data = {"time": pd.date_range(
         start = pd.to_datetime(daily.Time(), unit = "s", utc = True),
@@ -40,7 +38,6 @@ def get_data():
         inclusive="right"
     )}
 
-    print(daily_data)
 
     daily_data["temperature_2m_mean (°C)"] = daily_temperature_2m_mean
     daily_data["apparent_temperature_mean (°C)"] = daily_apparent_temperature_mean
